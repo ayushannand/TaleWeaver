@@ -33,4 +33,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Live site
 
-[TaleWeaver](taleweaver.vercel.app)
+[TaleWeaver](https://taleweaver.vercel.app/)
