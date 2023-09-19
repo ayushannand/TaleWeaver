@@ -28,6 +28,11 @@ const GenerateStory = () => {
   const [response, setResponse] = useState(''); // Store API response
   const [error, setError] = useState(null); // Store API error
 
+  const handlePostClick = async (e) => {
+    e.preventDefault();
+    
+  };
+
   const handlePromptChange = (event) => {
     setPrompt(event.target.value);
   };
