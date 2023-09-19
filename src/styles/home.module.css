@@ -1,0 +1,31 @@
+.optionContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .optionButton {
+    background-color: #333; /* Dark background color */
+    border: 1px solid #555; /* Darker border color */
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white; /* White text color */
+    transition: background-color 0.2s;
+  }
+  
+  .optionButton:hover {
+    background-color: #555; /* Slightly lighter background color on hover */
+  }
+  
+  .selectedOption {
+    background-color: #0070f3; /* Accent color for selected button */
+    border: 1px solid #0070f3;
+  }
+  
+  .selectedOption:hover {
+    background-color: #0050d2;
+    border: 1px solid #0050d2;
+  }
