@@ -5,10 +5,9 @@ const openai = new OpenAI({
 });
 
 export default async function handler(req, res) {
-  const { prompt,length } = req.body;
+  const { prompt, length } = req.body;
 
   const instructions = require("../../assets/prompt.js");
-
 
   // Define or replace userPrompt with the actual user prompt
   const userPrompt = {
@@ -16,19 +15,35 @@ export default async function handler(req, res) {
     content: `${prompt}\n**Keep the story in about ${length} words.** Strictly follow the word count estimate and don't go beyond 110% of length or don't make it 90% of the length`,
   };
 
+  const msgs = [...instructions, userPrompt]; // Combine instructions with the user prompt
 
-  const msgs = [...instructions, userPrompt]; // Combine instructions with user prompt
+  try {
+    const responsePromise = openai.chat.completions.create({
+      messages: msgs,
+      model: "gpt-3.5-turbo",
+    });
 
-  const response = await openai.chat.completions.create({
-    messages: msgs,
-    model: "gpt-3.5-turbo",
-});
-const responseData = response.choices[0].message.content; // Extract the response content as a string
+    // Set a timeout for the response (e.g., 30 seconds)
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Request timed out'));
+      }, 30000); // Adjust the timeout duration as needed (in milliseconds)
+    });
 
-console.log(responseData); // Log the response content
+    // Use Promise.race to await the response or the timeout
+    const response = await Promise.race([responsePromise, timeoutPromise]);
 
-res.status(200).send(responseData); 
+    if (response instanceof Error) {
+      throw response; // Handle timeout error
+    }
 
+    const responseData = response.choices[0].message.content; // Extract the response content as a string
 
+    console.log(responseData); // Log the response content
 
+    res.status(200).send(responseData);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: error.message });
+  }
 }
