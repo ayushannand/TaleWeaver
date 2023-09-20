@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
-import Alert from './alert.js'
+import Alert from './Alert.js'
 
 
 const marks = [
