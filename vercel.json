@@ -1,0 +1,16 @@
+{
+    "routes": [
+      {
+        "src": "/api/openai",
+        "methods": ["POST"],
+        "dest": "/api/openai",
+        "headers": {
+          "x-vercel-deployment-authorization": "@VERCEL_DEPLOY_SECRET@"
+        },
+        "config": {
+          "timeout": 30000
+        }
+      }
+    ]
+  }
+  
