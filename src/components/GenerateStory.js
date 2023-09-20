@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
+import Alert from './alert.js'
 
 
 const marks = [
@@ -26,11 +27,20 @@ const GenerateStory = () => {
   const [length, setLength] = useState('');
   const [loading, setLoading] = useState(false); // Track loading state
   const [response, setResponse] = useState(''); // Store API response
-  const [error, setError] = useState(null); // Store API error
+  const [alert, setAlert] = useState(null);
 
   const handlePostClick = async (e) => {
     e.preventDefault();
-    
+    setLoading(true);
+    try{
+      await axios.post(`/api/postStory`,{uid : 10, prompt : prompt, tale: response, upvote:100});
+      setResponse('');
+      setAlert({type:"success", message : "Your story is posted successfully!!"});
+    } catch (error) {
+      setAlert({type:"error", message : error.message}); // Set error message if the API call fails
+    } finally {
+      setLoading(false); // Stop loading indicator
+    }
   };
 
   const handlePromptChange = (event) => {
@@ -56,9 +66,9 @@ const GenerateStory = () => {
       }
 
       setResponse(assistantResponse.data); // Store the API response
-      setError(null); // Reset any previous errors
+      setAlert(null); // Reset any previous errors
     } catch (error) {
-      setError(error.message); // Set error message if the API call fails
+      setAlert(null); // Set error message if the API call fails
     } finally {
       setLoading(false); // Stop loading indicator
     }
@@ -67,7 +77,7 @@ const GenerateStory = () => {
   const handleResetClick = (event) => {
     setPrompt('');
     setResponse(''); // Reset response
-    setError(null); // Reset error
+    setAlert(null); // Reset error
   };
 
   return (
@@ -105,7 +115,7 @@ const GenerateStory = () => {
               variant="contained"
               color="success"
               className='bg-[#f2c2c2] m-5 hover:bg-[#ee9e9e]'
-              onClick={handleGenerateClick}
+              onClick={handlePostClick}
             >
               Post the story
             </Button>
@@ -132,6 +142,7 @@ const GenerateStory = () => {
 
       </div>
 
+
       {/* Loading indicator */}
       {loading && <CircularProgress />}
 
@@ -149,8 +160,10 @@ const GenerateStory = () => {
       )}
 
       {/* Display API error */}
-      {error && <div className="text-red-500 mt-4">{error}</div>}
+      {alert &&<div className='fixed bottom-5 m-2'><Alert message={alert.message} type={alert.type} time={5000} /></div>}
     </div>
+
+    
   );
 };
 
