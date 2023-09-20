@@ -24,7 +24,7 @@ const marks = [
 
 const GenerateStory = () => {
   const [prompt, setPrompt] = useState('');
-  const [length, setLength] = useState('');
+  const [length, setLength] = useState(150);
   const [loading, setLoading] = useState(false); // Track loading state
   const [response, setResponse] = useState(''); // Store API response
   const [alert, setAlert] = useState(null);
@@ -68,7 +68,7 @@ const GenerateStory = () => {
       setResponse(assistantResponse.data); // Store the API response
       setAlert(null); // Reset any previous errors
     } catch (error) {
-      setAlert(null); // Set error message if the API call fails
+      setAlert({type:"error", message : error.message}); // Set error message if the API call fails
     } finally {
       setLoading(false); // Stop loading indicator
     }
