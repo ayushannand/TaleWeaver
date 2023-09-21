@@ -8,12 +8,7 @@ const promptMsgs = [
     {
       role: "user",
       content:
-        "I'm giving you a story prompt, and I expect you to create a unique and imaginative short story based on it. Please ensure the story is engaging and coherent. Be as creative as possible!"
-    },
-    {
-      role: "user",
-      content:
-        "Here's a new story prompt for you. Craft a story that starts with: 'In a mystical forest, where ancient trees whispered secrets...' Let your creativity flow and bring this enchanting world to life!"
+        "Here's a new story prompt for you - "
     },
   ];
   module.exports = promptMsgs;

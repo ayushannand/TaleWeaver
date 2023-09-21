@@ -50,35 +50,40 @@ const ViewStories = () => {
       {loading ? (
         <CircularProgress />
       ) : (
-        <Stack spacing={2}>
-          {stories.map((story) => (
-            <Accordion key={story._id}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel-${story._id}-content`}
-                id={`panel-${story._id}-header`}
-              >
-                <Typography>{story.prompt}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <div className="dark-theme">
-                  <IconButton
-                    onClick={() => handleUpvote(story._id)}
-                    color={upvotedStories.has(story._id) ? 'primary' : 'default'}
-                  >
-                    {upvotedStories.has(story._id) ? (
-                      <ThumbUpIcon /> // Replace with your upvote icon
-                    ) : (
-                      <ThumbUpOffAltIcon /> // Replace with your un-upvoted icon
-                    )}
-                  </IconButton>
-                  <Typography>{`Upvotes: ${story.upvote}`}</Typography>
-                </div>
-                <Typography>{story.tale}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Stack>
+        <div className='flex justify-center'>
+          <Stack spacing={2} className='w-[90%]'>
+            {stories.map((story) => (
+              <Accordion key={story._id}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel-${story._id}-content`}
+                  id={`panel-${story._id}-header`}
+
+                >
+                  <div className="flex flex-row items-center justify-between w-full pr-4">
+                    <Typography>{story.prompt}</Typography>
+                    <div className="dark-theme flex items-center">
+                      <IconButton
+                        onClick={() => handleUpvote(story._id)}
+                        color={upvotedStories.has(story._id) ? 'primary' : 'default'}
+                      >
+                        {upvotedStories.has(story._id) ? (
+                          <ThumbUpIcon /> // Replace with your upvote icon
+                        ) : (
+                          <ThumbUpOffAltIcon /> // Replace with your un-upvoted icon
+                        )}
+                      </IconButton>
+                      <Typography>{`${story.upvote}`}</Typography>
+                    </div>
+                  </div>
+                </AccordionSummary>
+                <AccordionDetails className='px-10 text-justify'>
+                  <Typography>{story.tale}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Stack>
+        </div>
       )}
     </div>
   );
