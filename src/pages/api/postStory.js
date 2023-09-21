@@ -3,6 +3,9 @@ import connectDb from "../../../middleware/mongoose"
 
  const  handler = async (req,res) => {
     if(req.method == 'POST'){
+        if(req.body.prompt.trim()==="" || req.body.tale.trim()===""){
+            res.status(402).json({error:"Failed! Your prompt is empty!"});
+        }
         let s = new story({
             uid : req.body.uid,
             prompt : req.body.prompt,
