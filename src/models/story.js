@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
 const storySchema = new mongoose.Schema({
-    uid : {type: Number},
     prompt : {type: String},
     tale :  {type: String},
-    upvote : {type: Number, default: 1}
+    upvote : {type: Number, default: 0}
 }, {timestamps: true});
 
 mongoose.models = {};
