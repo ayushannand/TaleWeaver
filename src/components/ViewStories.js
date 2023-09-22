@@ -4,7 +4,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Stack, Button, CircularProgress, IconButton } from '@mui/material';
+import { Stack, CircularProgress, IconButton } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import axios from 'axios';
@@ -26,17 +26,47 @@ const ViewStories = () => {
   };
 
   // Function to handle upvote for a story
-  const handleUpvote = (storyId) => {
-    if (!upvotedStories.has(storyId)) {
-      // You can implement the logic to send an upvote to the server here
-      // For demonstration, we'll just update the local state
+  const handleVote = async (storyId, voteValue) => {
+    try {
+      // Update the local state first for a smooth UI transition
       setStories((prevStories) =>
         prevStories.map((story) =>
-          story._id === storyId ? { ...story, upvote: story.upvote + 1 } : story
+          story._id === storyId
+            ? { ...story, upvote: story.upvote + voteValue }
+            : story
         )
       );
-      // Mark the story as upvoted by adding it to the Set
-      upvotedStories.add(storyId);
+
+      if (voteValue === 1) {
+        // If voting up, mark the story as upvoted
+        setUpvotedStories((prevUpvotedStories) =>
+          new Set(prevUpvotedStories).add(storyId)
+        );
+      } else if (voteValue === -1) {
+        // If voting down, remove the story from upvoted stories
+        setUpvotedStories((prevUpvotedStories) => {
+          const updatedUpvotedStories = new Set(prevUpvotedStories);
+          updatedUpvotedStories.delete(storyId);
+          return updatedUpvotedStories;
+        });
+      }
+
+      // Call the API to update the vote
+      await axios.post(`/api/storyUpvote`, {
+        _id: storyId,
+        vote: voteValue,
+      });
+    } catch (error) {
+      console.error('Error updating vote:', error);
+
+      // Revert the local state change if there's an error
+      setStories((prevStories) =>
+        prevStories.map((story) =>
+          story._id === storyId
+            ? { ...story, upvote: story.upvote - voteValue }
+            : story
+        )
+      );
     }
   };
 
@@ -50,35 +80,44 @@ const ViewStories = () => {
       {loading ? (
         <CircularProgress />
       ) : (
-        <Stack spacing={2}>
-          {stories.map((story) => (
-            <Accordion key={story._id}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel-${story._id}-content`}
-                id={`panel-${story._id}-header`}
-              >
-                <Typography>{story.prompt}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <div className="dark-theme">
-                  <IconButton
-                    onClick={() => handleUpvote(story._id)}
-                    color={upvotedStories.has(story._id) ? 'primary' : 'default'}
-                  >
-                    {upvotedStories.has(story._id) ? (
-                      <ThumbUpIcon /> // Replace with your upvote icon
-                    ) : (
-                      <ThumbUpOffAltIcon /> // Replace with your un-upvoted icon
-                    )}
-                  </IconButton>
-                  <Typography>{`Upvotes: ${story.upvote}`}</Typography>
-                </div>
-                <Typography>{story.tale}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Stack>
+        <div className='flex justify-center'>
+          <Stack spacing={2} className='w-[90%]'>
+            {stories.map((story) => (
+              <Accordion key={story._id}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel-${story._id}-content`}
+                  id={`panel-${story._id}-header`}
+                >
+                  <div className="flex flex-row items-center justify-between w-full pr-4">
+                    <Typography>{story.prompt}</Typography>
+                    <div className="dark-theme flex items-center">
+                      {upvotedStories.has(story._id) ? (
+                        <IconButton
+                          onClick={() => handleVote(story._id, -1)}
+                          color='default'
+                        >
+                          <ThumbUpIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          onClick={() => handleVote(story._id, 1)}
+                          color='default'
+                        >
+                          <ThumbUpOffAltIcon />
+                        </IconButton>
+                      )}
+                      <Typography>{`${story.upvote}`}</Typography>
+                    </div>
+                  </div>
+                </AccordionSummary>
+                <AccordionDetails className='px-10 text-justify'>
+                  <Typography>{story.tale}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Stack>
+        </div>
       )}
     </div>
   );

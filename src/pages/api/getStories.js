@@ -7,4 +7,3 @@ import connectDb from "../../../middleware/mongoose"
 }
 
 export default connectDb(handler);
-  

@@ -33,7 +33,7 @@ const GenerateStory = () => {
     e.preventDefault();
     setLoading(true);
     try{
-      await axios.post(`/api/postStory`,{uid : 10, prompt : prompt, tale: response, upvote:100});
+      await axios.post(`/api/postStory`,{ prompt : prompt, tale: response, upvote:0});
       setResponse('');
       setAlert({type:"success", message : "Your story is posted successfully!!"});
     } catch (error) {
