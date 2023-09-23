@@ -4,7 +4,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Stack, CircularProgress, IconButton } from '@mui/material';
+import { Stack, CircularProgress, IconButton, Skeleton } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import axios from 'axios';
@@ -78,7 +78,14 @@ const ViewStories = () => {
   return (
     <div>
       {loading ? (
-        <CircularProgress />
+        <div className='flex flex-col items-center'>
+          <Skeleton animation="wave" className='w-[90%] h-16' />
+          <Skeleton animation="wave" className='w-[90%] h-16' />
+          <Skeleton animation="wave" className='w-[90%] h-16' />
+          <Skeleton animation="wave" className='w-[90%] h-16' />
+          <Skeleton animation="wave" className='w-[90%] h-16' />
+          <Skeleton animation="wave" className='w-[90%] h-16' />
+        </div>
       ) : (
         <div className='flex justify-center'>
           <Stack spacing={2} className='w-[90%]'>
