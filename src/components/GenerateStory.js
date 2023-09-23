@@ -8,8 +8,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
-import Alert from './Alert.js'
-
+import Alert from './Alert.js';
 
 const marks = [
   {
@@ -29,15 +28,19 @@ const GenerateStory = () => {
   const [response, setResponse] = useState(''); // Store API response
   const [alert, setAlert] = useState(null);
 
+  const handleApiError = (error) => {
+    setAlert({ type: 'error', message: error.message });
+  };
+
   const handlePostClick = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try{
-      await axios.post(`/api/postStory`,{ prompt : prompt, tale: response, upvote:0});
+    try {
+      await axios.post(`/api/postStory`, { prompt: prompt, tale: response, upvote: 0 });
       setResponse('');
-      setAlert({type:"success", message : "Your story is posted successfully!!"});
+      setAlert({ type: 'success', message: 'Your story is posted successfully!!' });
     } catch (error) {
-      setAlert({type:"error", message : error.message}); // Set error message if the API call fails
+      handleApiError(error); // Handle the error and set the alert message
     } finally {
       setLoading(false); // Stop loading indicator
     }
@@ -66,9 +69,9 @@ const GenerateStory = () => {
       }
 
       setResponse(assistantResponse.data); // Store the API response
-      setAlert(null); // Reset any previous errors
+      setAlert({ type: 'info', message: 'Story is generated!' });
     } catch (error) {
-      setAlert({type:"error", message : error.message}); // Set error message if the API call fails
+      handleApiError(error); // Handle the error and set the alert message
     } finally {
       setLoading(false); // Stop loading indicator
     }
@@ -160,7 +163,7 @@ const GenerateStory = () => {
       )}
 
       {/* Display API error */}
-      {alert &&<div className='fixed bottom-5 m-2'><Alert message={alert.message} type={alert.type} time={5000} /></div>}
+      {alert && <div className='fixed bottom-5 m-2'><Alert message={alert.message} type={alert.type} time={5000} /></div>}
     </div>
 
     
